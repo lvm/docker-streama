@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db-streama:
+    image: mysql:5.7
+    env_file:
+     - ./docker/db-streama.env
+    restart: unless-stopped
+    volumes:
+       - ./data:/var/lib/mysql
+  streama:
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        RELEASE: ${RELEASE:-1.7.0}
+    restart: unless-stopped
+    container_name: streama
+    ports:
+      - 8080:8080
+      - 4000:4000
+    env_file:
+     - ./docker/streama.env
+    volumes:
+      - ~/Videos:/data/local
